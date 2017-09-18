@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 5d8d78aa4602d8543b3beb03570cf5b1
+timeCreated: 1505603315
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Playlist
+  fontNames:
+  - Playlist
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 120b4ef9aacc3e14ebc49338334ea981, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

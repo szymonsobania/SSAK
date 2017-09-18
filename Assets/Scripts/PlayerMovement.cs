@@ -5,19 +5,24 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : MonoBehaviour
+{
 
     #region SerializeFields
     [SerializeField]
     private float jumpTime = 0.3f;
     [SerializeField]
     private Transform targetProvider;
+   
+
     [SerializeField]
     private Transform target;
     [SerializeField]
     private float rotationSpeed =30;
     [SerializeField]
     private Text scoreText;
+    [SerializeField]
+    private Text coinsText;
     #endregion
 
     public Vector3 Scale { get; set; }
@@ -26,13 +31,22 @@ public class PlayerMovement : MonoBehaviour {
     #region Private Fields   
     private float time = 0;
     private bool jump = false;
-    private int score = 0;
-
+    private static int score;
+    private static int coinsNumber;
     #endregion
 
     #region Unity Callbacks
-   
-    private void Update()
+    
+    private void Awake()
+    {
+        if (PlayerPrefs.HasKey("Coins"))
+        {
+            coinsNumber = PlayerPrefs.GetInt("Coins");
+            coinsText.text = coinsNumber.ToString();
+        }
+        score = 0;
+    }
+        private void Update()
     {
         RotatePlayer();
         time += Time.deltaTime;
@@ -45,11 +59,26 @@ public class PlayerMovement : MonoBehaviour {
         transform.localScale -= Scale * transform.localScale.x * Time.deltaTime;
         if (transform.localScale.x < 0.6)
         {
-            SceneManager.LoadScene(0);
+            GameOver();
         }
     }
 
-   
+    private static void GameOver()
+    {
+        PlayerPrefs.SetInt("Player Score", score);
+        if (!PlayerPrefs.HasKey("Best Score"))
+        {
+            PlayerPrefs.SetInt("Best Score", score);
+        }
+        if (score > PlayerPrefs.GetInt("Best Score"))
+        {
+            PlayerPrefs.SetInt("Best Score", score);
+        }
+        PlayerPrefs.SetInt("Coins", coinsNumber);
+        SceneManager.LoadScene(0);
+    }
+
+
     public void Click()
     {
     //    if (jump)
@@ -77,6 +106,13 @@ public class PlayerMovement : MonoBehaviour {
         }        
     }
     #endregion
+
+    public void CollectCoin()
+    {
+        coinsNumber++;
+        coinsText.text = coinsNumber.ToString();
+    }
+
     public void Collision()
     {
         if (coroutine!= null)
@@ -87,7 +123,7 @@ public class PlayerMovement : MonoBehaviour {
     private IEnumerator CheckCollison()
     {
         yield return new WaitForSeconds(0.1f);
-        SceneManager.LoadScene(0);
+        GameOver();
         //gameover
         jump = false;     
     }
